@@ -1344,6 +1344,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Fish
   delayBetweenCatches: 2
   fishCounterText: {fileID: 0}
+  currentPoints: 0
+  pointsPerCatch: 10
+  pointsText: {fileID: 1986460339}
+  rodInfoText: {fileID: 0}
+  availableRods:
+  - rodName: Basic rod
+    unlockCost: 0
+    isUnlocked: 0
+    zoneSizeMultiplier: 1
+    markerSpeedMultiplier: 1
+    mashPowerMultiplier: 1
+  - rodName: Pro rod
+    unlockCost: 20
+    isUnlocked: 0
+    zoneSizeMultiplier: 1.5
+    markerSpeedMultiplier: 0.8
+    mashPowerMultiplier: 2
   Area: {fileID: 1331064721}
   Mark: {fileID: 1233642017}
   Zone: {fileID: 31760961}
@@ -1433,6 +1450,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onAllFishCaught:
+    m_PersistentCalls:
+      m_Calls: []
+  onRodUpgraded:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &788571699
@@ -11935,8 +11955,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 749, y: 463}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 771.58, y: 463}
+  m_SizeDelta: {x: 245.17, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1986460339
 MonoBehaviour:
@@ -12024,7 +12044,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -45.16549, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
