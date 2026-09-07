@@ -45,9 +45,8 @@ public class Fishing : MonoBehaviour
     public TMP_Text fishCounterText;
 
     [Header("Rod System & Points")]
-    public int currentPoints = 0;
+    public int currentPoints = 0; // เก็บไว้คำนวณการซื้อเบ็ด แต่ไม่แสดงบนจอ
     public int pointsPerCatch = 10;
-    public TMP_Text pointsText;
     public TMP_Text rodInfoText;
     public FishingRod[] availableRods;
     private int equippedRodIndex = 0;
@@ -104,7 +103,6 @@ public class Fishing : MonoBehaviour
             stopAction.action.Enable();
         }
 
-        UpdatePointsUI();
         UpdateRodUI();
 
         if (autoStartOnEnable) StartFishingSession();
@@ -250,8 +248,15 @@ public class Fishing : MonoBehaviour
     {
         if (mashSuccess)
         {
-            currentPoints += pointsPerCatch;
-            UpdatePointsUI();
+            currentPoints += pointsPerCatch; // เก็บแต้มสะสมเงียบๆ ไว้ซื้อเบ็ด
+
+            // --- ส่วนที่เพิ่มใหม่สำหรับ MoneyManager ---
+            if (MoneyManager.instance != null)
+            {
+                // ใช้ค่า pointsPerCatch เป็นจำนวนเงินที่ได้รับ
+                MoneyManager.instance.AddMoney(pointsPerCatch);
+            }
+            // ----------------------------------------
 
             if (!fishCaughtTracker.ContainsKey(currentFish.name))
                 fishCaughtTracker[currentFish.name] = 0;
@@ -282,7 +287,8 @@ public class Fishing : MonoBehaviour
             {
                 state = State.Result;
                 resultTimer = delayBetweenCatches;
-                if (Text) { Text.gameObject.SetActive(true); Text.text = $"Caught a {currentFish.name}!\n+ {pointsPerCatch} Pts\nNext in {delayBetweenCatches}s..."; }
+                // เอาคำว่า + Pts ออกไปแล้ว
+                if (Text) { Text.gameObject.SetActive(true); Text.text = $"Caught a {currentFish.name}!\nNext in {delayBetweenCatches}s..."; }
             }
         }
         else
@@ -315,7 +321,6 @@ public class Fishing : MonoBehaviour
                 availableRods[nextIndex].isUnlocked = true;
                 equippedRodIndex = nextIndex;
 
-                UpdatePointsUI();
                 UpdateRodUI();
                 onRodUpgraded?.Invoke();
                 Debug.Log($"ปลดล็อกเบ็ดใหม่สำเร็จ: {nextRod.rodName}");
@@ -325,12 +330,6 @@ public class Fishing : MonoBehaviour
                 Debug.Log("แต้มไม่พออัปเกรดเบ็ด!");
             }
         }
-    }
-
-    private void UpdatePointsUI()
-    {
-        // อัปเดต UI ให้เป็น "Score : [คะแนน]" ตรงตามภาพของคุณ
-        if (pointsText != null) pointsText.text = $"Score : {currentPoints}";
     }
 
     private void UpdateRodUI()
