@@ -1,3 +1,189 @@
+﻿MOCHI
+mochi_desu
+ไม่ระบุ
+﻿
+นี่คือจุดเริ่มต้นของช่อง #script 
+!Venus [COG],  — 3:24
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro; // ใช้สำหรับ TextMeshPro
+
+public class InventorySlot : MonoBehaviour
+{
+    public Image iconImage; // ช่องสำหรับใส่รูปปลา
+    public TextMeshProUGUI amountText; // ช่องสำหรับใส่ตัวเลขจำนวน
+
+    // ส่งรูปและจำนวนมาให้แสดงผล
+    public void SetupSlot(Sprite icon, int amount)
+    {
+        iconImage.sprite = icon; // ตั้งค่ารูป
+
+        if (amount > 1)
+        {
+            amountText.text = amount.ToString(); // โชว์ตัวเลขถ้ามีมากกว่า 1
+            amountText.gameObject.SetActive(true);
+        }
+        else
+        {
+            amountText.gameObject.SetActive(false); // ซ่อนตัวเลขถ้ามีแค่ 1 ชิ้น
+        }
+    }
+}
+ชื่อ InventorySlot⁠ 
+!Venus [COG],  — 3:48
+ส่งต่อแล้ว
+ภาพ
+#chat  •  เมื่อวานนี้ เวลา 14:39
+!Venus [COG],  — 3:57
+ภาพ
+!Venus[COG],  — 4:05
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InventoryManager : MonoBehaviour
+{
+    public static InventoryManager instance;
+
+    [Header("ฐานข้อมูลปลาทั้งหมดในเกม")]
+    public List<ItemData> allFishDatabase = new List<ItemData>();
+
+    [Header("ข้อมูลในกระเป๋า (นับจำนวน)")]
+    public Dictionary<ItemData, int> inventoryItems = new Dictionary<ItemData, int>();
+
+    [Header("UI References")]
+    public GameObject inventoryUIPanel;
+    public Transform inventoryGrid;
+    public GameObject itemSlotPrefab;
+
+    void Awake()
+    {
+        if (instance == null) instance = this;
+    }
+
+    void Start()
+    {
+        if (inventoryUIPanel != null) inventoryUIPanel.SetActive(false);
+        // สั่งวาด UI ตั้งแต่เริ่มเกม เพื่อให้โชว์เงาปลารอไว้เลย
+        UpdateInventoryUI();
+    }
+
+    public void ToggleInventory()
+    {
+        bool isActive = inventoryUIPanel.activeSelf;
+        inventoryUIPanel.SetActive(!isActive);
+    }
+
+    public void AddItem(ItemData newItem)
+    {
+        if (inventoryItems.ContainsKey(newItem))
+        {
+            inventoryItems[newItem]++;
+        }
+        else
+        {
+            inventoryItems.Add(newItem, 1);
+        }
+        UpdateInventoryUI();
+    }
+
+    public void UpdateInventoryUI()
+    {
+        foreach (Transform child in inventoryGrid)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // วนลูปจากฐานข้อมูลปลา 'ทั้งหมด' ที่มีในเกม
+        foreach (ItemData fish in allFishDatabase)
+        {
+            GameObject newSlot = Instantiate(itemSlotPrefab, inventoryGrid);
+            InventorySlot slotScript = newSlot.GetComponent<InventorySlot>();
+
+            if (slotScript != null)
+            {
+                // เช็กว่าในกระเป๋าเรา มีปลาชนิดนี้อยู่จริงไหม และมีจำนวนมากกว่า 0 หรือเปล่า
+                bool hasFish = inventoryItems.ContainsKey(fish) && inventoryItems[fish] > 0;
+
+                // ดึงจำนวนปลาออกมาส่งให้ UI (ถ้าไม่มีให้เป็น 0)
+                int amount = hasFish ? inventoryItems[fish] : 0;
+
+                // ส่งข้อมูลไปให้ Slot พร้อมสถานะ hasFish (ปลดล็อกแล้วหรือยัง)
+                slotScript.SetupSlot(fish.itemIcon, amount, hasFish);
+            }
+        }
+    }
+}
+ภาพ
+!Venus[COG],  — 6:13
+https://github.com/panai0615157716-arch/Fot-Fish4
+GitHub
+GitHub - panai0615157716 - arch / Fot - Fish4
+Contribute to panai0615157716-arch/Fot-Fish4 development by creating an account on GitHub.
+Contribute to panai0615157716-arch/Fot-Fish4 development by creating an account on GitHub.
+!Venus [COG],  — 15:03
+using UnityEngine;
+using UnityEngine.UI;
+
+[RequireComponent(typeof(Button))]
+public class ButtonGiveItem : MonoBehaviour
+{
+    [Header("ข้อมูลปลาที่จะได้รับเมื่อกดปุ่มนี้")]
+    public ItemData itemToGive;
+
+    private Button myButton;
+
+    void Start()
+    {
+        myButton = GetComponent<Button>();
+        myButton.onClick.AddListener(GiveItem);
+    }
+
+    private void GiveItem()
+    {
+        if (itemToGive != null && InventoryManager.instance != null)
+        {
+            // สั่งเรียกใช้ฟังก์ชัน AddItem จากสมองหลัก (InventoryManager)
+            InventoryManager.instance.AddItem(itemToGive);
+            Debug.Log("ได้รับปลา: " + itemToGive.itemName);
+        }
+    }
+}
+ButtonGiveItem
+!Venus[COG],  — 15:11
+MOCHI[DORO],  — 15:17
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.UI;
+using System.Collections.Generic;
+
+Fishing.cs
+18 KB
+!Venus[COG],  — 18:29
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/ItemData")]
+public class ItemData : ScriptableObject
+{
+    public string itemName;
+    public Sprite itemIcon;
+}
+!Venus[COG],  — 20:27
+ภาพ
+MOCHI[DORO],  — 20:59
+1402939433
+!Venus[COG],  — 21:52
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.UI;
+using System.Collections.Generic;
+
+Fishing.cs
+18 KB
+﻿
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -30,10 +216,10 @@ public struct FishingRod
     public int unlockCost;
     public bool isUnlocked;
 
-    [Header("Rod Stats Modifiers (1.0 = ����)")]
-    public float zoneSizeMultiplier;    // �����⫹���ҧ��� (Phase 1)
-    public float markerSpeedMultiplier; // ���������觪��ŧ (Phase 1)
-    public float mashPowerMultiplier;   // �����ç��ԡ (Phase 2)
+    [Header("Rod Stats Modifiers (1.0 = ปกติ)")]
+    public float zoneSizeMultiplier;    // ทำให้โซนกว้างขึ้น (Phase 1)
+    public float markerSpeedMultiplier; // ทำให้ตัววิ่งช้าลง (Phase 1)
+    public float mashPowerMultiplier;   // เพิ่มแรงคลิก (Phase 2)
 }
 
 public class Fishing : MonoBehaviour
@@ -45,7 +231,7 @@ public class Fishing : MonoBehaviour
     public TMP_Text fishCounterText;
 
     [Header("Rod System & Points")]
-    public int currentPoints = 0; // �����ӹǳ��ë����� ������ʴ�����
+    public int currentPoints = 0; // เก็บไว้คำนวณการซื้อเบ็ด แต่ไม่แสดงบนจอ
     public int pointsPerCatch = 10;
     public TMP_Text rodInfoText;
     public FishingRod[] availableRods;
@@ -248,12 +434,12 @@ public class Fishing : MonoBehaviour
     {
         if (mashSuccess)
         {
-            currentPoints += pointsPerCatch; // �����������º� ��������
+            currentPoints += pointsPerCatch; // เก็บแต้มสะสมเงียบๆ ไว้ซื้อเบ็ด
 
-            // --- ��ǹ���������������Ѻ MoneyManager ---
+            // --- ส่วนที่เพิ่มใหม่สำหรับ MoneyManager ---
             if (MoneyManager.instance != null)
             {
-                // ���� pointsPerCatch �繨ӹǹ�Թ������Ѻ
+                // ใช้ค่า pointsPerCatch เป็นจำนวนเงินที่ได้รับ
                 MoneyManager.instance.AddMoney(pointsPerCatch);
             }
             // ----------------------------------------
@@ -287,7 +473,7 @@ public class Fishing : MonoBehaviour
             {
                 state = State.Result;
                 resultTimer = delayBetweenCatches;
-                // ��Ҥ���� + Pts �͡�����
+                // เอาคำว่า + Pts ออกไปแล้ว
                 if (Text) { Text.gameObject.SetActive(true); Text.text = $"Caught a {currentFish.name}!\nNext in {delayBetweenCatches}s..."; }
             }
         }
@@ -306,7 +492,7 @@ public class Fishing : MonoBehaviour
     {
         if (availableRods == null || equippedRodIndex >= availableRods.Length - 1)
         {
-            Debug.Log("�����������ѻ�ô����");
+            Debug.Log("ไม่มีเบ็ดให้อัปเกรดแล้ว");
             return;
         }
 
@@ -323,11 +509,11 @@ public class Fishing : MonoBehaviour
 
                 UpdateRodUI();
                 onRodUpgraded?.Invoke();
-                Debug.Log($"�Ŵ��͡�����������: {nextRod.rodName}");
+                Debug.Log($"ปลดล็อกเบ็ดใหม่สำเร็จ: {nextRod.rodName}");
             }
             else
             {
-                Debug.Log("��������ѻ�ô��!");
+                Debug.Log("แต้มไม่พออัปเกรดเบ็ด!");
             }
         }
     }
@@ -524,3 +710,5 @@ public class Fishing : MonoBehaviour
         return true;
     }
 }
+Fishing.cs
+18 KB

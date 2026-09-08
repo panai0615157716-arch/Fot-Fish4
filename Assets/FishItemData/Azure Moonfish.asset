@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c938cf83e1bd044bb6757b95af218a0, type: 3}
+  m_Name: Azure Moonfish
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: Azure Moonfish
+  itemIcon: {fileID: 4301250902094961619, guid: 17fd2c6ff2832c649bfc39c564d9f197, type: 3}

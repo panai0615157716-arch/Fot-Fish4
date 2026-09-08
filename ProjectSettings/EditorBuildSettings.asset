@@ -9,8 +9,17 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 2a53d8ea23b6b1f4e9055ecc7b6d1f04
   - enabled: 1
+    path: Assets/Scenes/BorNam.unity
+    guid: f6f50dfc67689e1458dffc9eafe2a961
+  - enabled: 1
     path: Assets/Scenes/Fishing.unity
     guid: da40a4d9e1161024aad3fd282d9c391f
+  - enabled: 1
+    path: Assets/Scenes/BackPack.unity
+    guid: 39fc779a588d5204e9f41b82f5c8f5e5
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 4408b0e79fa0fba46a5459e9672420c5
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

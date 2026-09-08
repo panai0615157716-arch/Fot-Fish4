@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c938cf83e1bd044bb6757b95af218a0, type: 3}
+  m_Name: Shadow Spine
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: Shadow Spine
+  itemIcon: {fileID: -5184886056005491619, guid: 80468bd922d01a445b0caad5aabb24e0, type: 3}
